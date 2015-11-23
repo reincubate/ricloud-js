@@ -1,0 +1,14 @@
+{
+  "api_version": 1,
+  "endpoints": {
+    "host": "https://api.icloudextractor.com"
+  },
+  "auth": {
+    "user": "120455",
+    "key": "1413537101"
+  },
+  "icloud": {
+    "apple_id": "",
+    "password": ""
+  }
+}

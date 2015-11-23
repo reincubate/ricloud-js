@@ -1,0 +1,22 @@
+{
+  "name": "ricloud",
+  "version": "1.0",
+  "license": "LGPL-3.0",
+  "homepage": "https://www.reincubate.com",
+  "scripts": {
+    "test": "node ricloud-test.js"
+  },
+  "dependencies": {
+    "request": "~2.67.0",
+    "moment": "~2.10.6",
+    "readline-sync": "~1.2.21"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/reincubate/ricloud-js.git"
+  },
+  "main": "dist/ricloud.js",
+  "keywords": {
+    "icloud"
+  }
+}
