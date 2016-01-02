@@ -1,4 +1,4 @@
-# ricloud: iCloud access made easy
+# ricloud-js: iCloud access made easy
 
 This is the sample JavaScript Node.js client for Reincubate's [iCloud API](https://www.reincubate.com/labs/icloud-api/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud).
 
@@ -77,8 +77,6 @@ That `api.devices` dictionary contains data in this format:
 
 ### Using the JSON feed API
 
-### Using the JSON feed API
-
 The API is able to return data retrieved from a wide range of apps, and enumerations for some of these are baked into the sample API. However, we have many other types of app feeds available, including Viber, Kik, WeChat, Line, and others.
 
 > We also have functionality such as message undeletion which can be enabled on demand against API keys.
@@ -99,9 +97,6 @@ api.requestData(device, requested_data, since, function(err,data) {
     console.log(data)
 })
 ```
-
-## Troubleshooting
-
 
 ## Troubleshooting
 
