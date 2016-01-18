@@ -30,13 +30,14 @@ var API_VER = 1
  * @param [key] {string|null} Corresponding authentication key supplied by Reincubate
  * @constructor
  */
-var riCloud = function (user, key) {
+var riCloud = function (user, key, settingsPath) {
     // Attempt to get settings from file
-    var settings = JSON.parse(fs.readFileSync('conf/settings.json', 'utf8'));
+    
+    var settings = JSON.parse(fs.readFileSync(settingsPath ? settingsPath : 'conf/settings.json', 'utf8'));
 
     user = user ? user : settings.auth.user
     key = key ? key : settings.auth.key
-    HOST = settings.endpoints.host ? settings.endpoints.host : HOST
+    HOST = settings.endpoints ? (settings.endpoints.host ? settings.endpoints.host : HOST) : HOST
     API_VER = settings.api_version ? settings.api_version : API_VER
 
     this.auth = {
@@ -108,7 +109,7 @@ riCloud.prototype.login = function (appleID, password, cb) {
             context.devices = data.devices
             cb(0, null)
         } else {
-            cb(context.error.GENERAL, response)
+            cb(error, response)
         }
     }
 
