@@ -1,6 +1,6 @@
 var readlineSync = require('readline-sync');
 
-var riCloud = require('ricloud');
+var riCloud = require('./dist/ricloud');
 var api = new riCloud();
 
 var device;
