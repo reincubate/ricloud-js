@@ -5,11 +5,11 @@ var fs = require('fs');
 
 // endpoints
 var ENDPOINTS = {
-  'login': "/c/sign-in/",
-  'challenge_2fa': "/c/perform-2fa-challenge/",
-  'submit_2fa': "/c/submit-2fa-challenge/",
-  'download_data': "/c/download-data/",
-  'download_file': "/c/download-file/",
+  'login': '/c/sign-in/',
+  'challenge_2fa': '/c/perform-2fa-challenge/',
+  'submit_2fa': '/c/submit-2fa-challenge/',
+  'download_data': '/c/download-data/',
+  'download_file': '/c/download-file/',
 };
 
 var HOST = 'https://api.icloudextractor.com';
@@ -65,6 +65,7 @@ var riCloud = function (user, key, settings) {
   this.error = {
     GENERAL: 1,
     TWOFA_REQUIRED: 2,
+    UNABLE_TO_LOGIN: 3,
   };
 
   this.appleID = settings ? settings.icloud.apple_id ? settings.icloud.apple_id : null : null;
@@ -99,18 +100,23 @@ riCloud.prototype.login = function (appleID, password, cb) {
 
   function callback(error, response, body) {
     var data;
-    if (!error && response.statusCode === 409) {
+    if (!error && response.statusCode === 403) {
+      data = JSON.parse(body);
+      if (data.error === 'unable-to-login') {
+        cb(context.error.UNABLE_TO_LOGIN, response);
+      }
+    } else if (!error && response.statusCode === 409) {
       data = JSON.parse(body);
       if (data.error === '2fa-required') {
         context.sessionKey = data.data.key;
         context.trustedDevices = data.data.trustedDevices;
-        cb(context.error.TWOFA_REQUIRED, null);
+        cb(context.error.TWOFA_REQUIRED, response);
       }
     } else if (!error && response.statusCode === 200) {
       data = JSON.parse(body);
       context.sessionKey = data.key;
       context.devices = data.devices;
-      cb(0, null);
+      cb(0, response);
     } else {
       cb(error, response);
     }
