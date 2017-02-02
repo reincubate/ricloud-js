@@ -7,9 +7,9 @@
     "test": "node ricloud-test.js"
   },
   "dependencies": {
-    "request": "~2.67.0",
     "moment": "~2.10.6",
-    "readline-sync": "~1.2.21"
+    "readline-sync": "~1.2.21",
+    "request": "~2.67.0"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,9 @@
   "main": "dist/ricloud.js",
   "keywords": [
     "icloud"
-  ]
+  ],
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.14.1"
+  }
 }
