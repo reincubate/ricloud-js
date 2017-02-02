@@ -1,9 +1,18 @@
 var readlineSync = require('readline-sync');
 
 var riCloud = require('./dist/ricloud');
-var api = new riCloud();
+var setting = require('./conf/settings.json');
 
 var device;
+
+if (!setting.icloud.apple_id) {
+  setting.icloud.apple_id = readlineSync.question('\niCloud account(Email): ');
+  setting.icloud.password = readlineSync.question('\niCloud Password: ', {
+    hideEchoBack: true,
+  });
+}
+
+var api = new riCloud(setting.auth.user, setting.auth.key, setting);
 
 login();
 
