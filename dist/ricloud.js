@@ -100,6 +100,10 @@ riCloud.prototype.login = function (appleID, password, cb) {
 
   function callback(error, response, body) {
     var data;
+    // NOTE: request module do not callback any error if there is a remote server error such as 503.
+    if (!error && response.statusCode && response.statusCode >= 500) {
+      callback(new Error('remote server error: ' + response.statusCode), response);
+    }
     if (!error && response.statusCode === 403) {
       data = JSON.parse(body);
       if (data.error === 'unable-to-login') {
