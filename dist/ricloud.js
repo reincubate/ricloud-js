@@ -2,6 +2,8 @@
 var request = require('request');
 var moment = require('moment');
 var fs = require('fs');
+var _ = require('lodash');
+var debug = require('debug')('ricloud');
 
 // endpoints
 var ENDPOINTS = {
@@ -98,7 +100,11 @@ riCloud.prototype.login = function (appleID, password, cb) {
 
   var options = generateOptions(this, 'login', data);
 
+  debug('login options:', _.omit(options, 'form.password'));
+
   function callback(error, response, body) {
+    debug('login result:', JSON.parse(response.body));
+
     var data;
     // NOTE: request module do not callback any error if there is a remote server error such as 503.
     if (!error && response.statusCode && response.statusCode >= 500) {
@@ -113,12 +119,14 @@ riCloud.prototype.login = function (appleID, password, cb) {
       data = JSON.parse(body);
       if (data.error === '2fa-required') {
         context.sessionKey = data.data.key;
+        context.authToken = data.data.auth_token;
         context.trustedDevices = data.data.trustedDevices;
         cb(context.error.TWOFA_REQUIRED, response);
       }
     } else if (!error && response.statusCode === 200) {
       data = JSON.parse(body);
       context.sessionKey = data.key;
+      context.authToken = data.auth_token;
       context.devices = data.devices;
       cb(0, response);
     } else {

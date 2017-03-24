@@ -7,6 +7,8 @@
     "test": "node ricloud-test.js"
   },
   "dependencies": {
+    "debug": "^2.6.3",
+    "lodash": "^4.17.4",
     "moment": "~2.10.6",
     "readline-sync": "~1.2.21",
     "request": "~2.67.0"
