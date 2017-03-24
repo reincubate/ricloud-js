@@ -23,9 +23,9 @@ function login(err, data) {
   api.login(getData);
 }
 
-function getData(err, data) {
+function getData(err, response) {
   if (err === api.error.GENERAL) {
-    showError(data);
+    showError(response);
   }
 
   if (err === api.error.TWOFA_REQUIRED) {
@@ -36,9 +36,10 @@ function getData(err, data) {
     console.log('Selected: ' + api.trustedDevices[index]);
     api.requestTwoFAChallenge(api.trustedDevices[index], promptForCode);
   } else {
+    console.log('login result:', JSON.parse(response.body));
+    console.log(`authToken: ${api.authToken}`);
     showDeviceInfo(null, null);
   }
-
 }
 
 function promptForCode(err, data) {
@@ -56,12 +57,17 @@ function showDeviceInfo(err, data) {
   }
   device = Object.keys(api.devices)[0];
   var deviceInfo = api.devices[device];
-  console.log(deviceInfo);
+  console.log(device, deviceInfo);
 
   var requested_data = api.data.INSTALLED_APPS | api.data.SMS;
-  var since = new Date(2015, 0, 1);
-  console.log('\nDownloading data...');
-  api.requestData(device, requested_data, since, showData);
+
+  var toDownloadData = readlineSync.question(`\nDo you wan to download SMS? (y/N)`) || 'N';
+
+  if (toDownloadData === 'y') {
+    var since = new Date(2015, 0, 1);
+    console.log('\nDownloading data...');
+    api.requestData(device, requested_data, since, showData);
+  }
 }
 
 function showData(err, data) {
