@@ -17,14 +17,14 @@ var api = new riCloud(setting.auth.user, setting.auth.key, setting);
 login();
 
 function login(err, data) {
-  if (err === api.error.GENERAL) {
+  if (err) {
     showError(data);
   }
   api.login(getData);
 }
 
 function getData(err, response) {
-  if (err === api.error.GENERAL) {
+  if (err) {
     showError(response);
   }
 
@@ -43,7 +43,7 @@ function getData(err, response) {
 }
 
 function promptForCode(err, data) {
-  if (err === api.error.GENERAL) {
+  if (err) {
     showError(data);
   }
   var code = readlineSync.question('\nA code has been sent to your device. Please enter code: ');
@@ -52,7 +52,7 @@ function promptForCode(err, data) {
 }
 
 function showDeviceInfo(err, data) {
-  if (err === api.error.GENERAL) {
+  if (err) {
     showError(data);
   }
   device = Object.keys(api.devices)[0];
