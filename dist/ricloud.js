@@ -103,7 +103,7 @@ riCloud.prototype.login = function (appleID, password, cb) {
   debug('login options:', _.omit(options, 'form.password'));
 
   function callback(error, response, body) {
-    debug('login result:', JSON.parse(response.body));
+    debug(`login result: status code: ${response.statusCode}, data:`, JSON.parse(response.body));
 
     var data;
     // NOTE: request module do not callback any error if there is a remote server error such as 503.
@@ -112,8 +112,12 @@ riCloud.prototype.login = function (appleID, password, cb) {
     }
     if (!error && response.statusCode === 403) {
       data = JSON.parse(body);
-      if (data.error === 'unable-to-login') {
+      if (data.error === 'unable-to-login' ||
+          data.error === 'account-credentials-blocked' ||
+          data.error === 'account-locked') {
         cb(context.error.UNABLE_TO_LOGIN, response);
+      } else {
+        cb(context.error.GENERAL, response);
       }
     } else if (!error && response.statusCode === 409) {
       data = JSON.parse(body);
@@ -122,6 +126,8 @@ riCloud.prototype.login = function (appleID, password, cb) {
         context.authToken = data.data.auth_token;
         context.trustedDevices = data.data.trustedDevices;
         cb(context.error.TWOFA_REQUIRED, response);
+      } else {
+        cb(context.error.GENERAL, response);
       }
     } else if (!error && response.statusCode === 200) {
       data = JSON.parse(body);
