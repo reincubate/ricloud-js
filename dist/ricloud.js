@@ -12,6 +12,7 @@ var ENDPOINTS = {
   'submit_2fa': '/c/submit-2fa-challenge/',
   'download_data': '/c/download-data/',
   'download_file': '/c/download-file/',
+  'refresh_session': '/c/refresh-session/',
 };
 
 var HOST = 'https://api.icloudextractor.com';
@@ -145,6 +146,39 @@ riCloud.prototype.login = function (appleID, password, cb) {
 };
 
 /**
+ * Reresh Session from iCloud.
+ * @param authToken {string}  auth_token returned by login
+ * @param cb {callback} Callback
+ */
+riCloud.prototype.refreshSession = function(cb) {
+  console.assert(this.authToken, 'authToken is required, please log in.');
+  var newArgs = argsWithFn(arguments, ['authToken', 'cb']);
+  cb = newArgs.cb;
+
+  var data = {
+    auth_token: this.authToken,
+  };
+  var options = generateOptions(this, 'refresh_session', data);
+
+  function callback(error, response, body) {
+    debug(`refresh session: status code: ${response.statusCode}, data:`, JSON.parse(response.body));
+
+    if (!error && response.statusCode === 200) {
+      var data = JSON.parse(body);
+      cb(0, data);
+    } else {
+      cb(context.error.GENERAL, response);
+    }
+  }
+
+  var context = this;
+
+  debug('refresh session by options:', options);
+
+  request(options, callback);
+};
+
+/**
  * Pull data from iCloud from a given point in time.
  * @param device {string}  Device ID to pull data for
  * @param [requestedData] {number|null} Bit mask representing what data to download
@@ -196,7 +230,6 @@ riCloud.prototype.requestData = function(device, requestedData, sinceDate, cb) {
   var context = this;
   request(options, callback);
 };
-
 
 /**
  * Download an individual file from the iCloud backup
