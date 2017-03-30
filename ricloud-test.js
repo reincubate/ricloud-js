@@ -3,32 +3,70 @@ var readlineSync = require('readline-sync');
 var riCloud = require('./dist/ricloud');
 var setting = require('./conf/settings.json');
 
+const LOGIN_BY_ICLOUD_PASSWORD = '1';
+const LOGIN_BY_AUTH_TOKEN = '2';
+const LOGIN_BY_SESSION_KEY = '3';
+
 var device;
 
 if (!setting.icloud.apple_id) {
   setting.icloud.apple_id = readlineSync.question('\niCloud account(Email): ');
-  setting.icloud.password = readlineSync.question('\niCloud Password: ', {
-    hideEchoBack: true,
-  });
 }
 
-var api = new riCloud(setting.auth.user, setting.auth.key, setting);
+var authTask = readlineSync.question(`
+  Which way do you want to use for login: (default: ${LOGIN_BY_ICLOUD_PASSWORD})
+  1) iCloud password
+  2) auth token
+  3) session key
+`) || LOGIN_BY_ICLOUD_PASSWORD;
+
+var api = createApi(authTask);
 
 login();
+
+function createApi(authTask) {
+  let api;
+
+  if (authTask === LOGIN_BY_ICLOUD_PASSWORD) {
+    if (!setting.icloud.password) {
+      setting.icloud.password = readlineSync.question('\niCloud Password: ', {
+        hideEchoBack: true,
+      });
+    }
+  }
+
+  api = new riCloud(setting.auth.user, setting.auth.key, setting);
+
+  if (authTask === LOGIN_BY_AUTH_TOKEN) {
+    api.authToken = readlineSync.question('\nauth token: ');
+  } else if (authTask === LOGIN_BY_SESSION_KEY) {
+    api.sessionKey = readlineSync.question('\nsession key: ');
+  }
+
+  return api;
+}
 
 function login(err, data) {
   if (err) {
     showError(data);
   }
-  api.login(getData);
+
+  if (authTask === LOGIN_BY_AUTH_TOKEN) {
+    api.refreshSession(() => {
+      login(api.devices);
+      runTask();
+    });
+  } else if (authTask === LOGIN_BY_SESSION_KEY) {
+    runTask();
+  } else {
+    api.login(handleLogin);
+  }
 }
 
-function getData(err, response) {
-  if (err) {
+function handleLogin(err, response) {
+  if (err === api.error.GENERAL) {
     showError(response);
-  }
-
-  if (err === api.error.TWOFA_REQUIRED) {
+  } else if (err === api.error.TWOFA_REQUIRED) {
     var index = readlineSync.keyInSelect(api.trustedDevices, '\n2FA has been enabled, choose a trusted device');
     if (index === -1) {
       process.exit(1);
@@ -38,7 +76,30 @@ function getData(err, response) {
   } else {
     console.log('login result:', JSON.parse(response.body));
     console.log(`authToken: ${api.authToken}`);
-    showDeviceInfo(null, null);
+    runTask();
+  }
+}
+
+function runTask() {
+  var task = readlineSync.question(`
+    \nChoose a task to run: (default: 1)
+    \n1) show device info
+  `) || '1';
+
+  switch (task) {
+    case '1':
+      if (!api.devices) {
+        let deviceCode = readlineSync.question('\nDevice code: ');
+        let deviceObj = {};
+
+        deviceObj[deviceCode] = {};
+
+        api.devices = [deviceObj];
+      }
+      showDeviceInfo(null, null);
+      break;
+    default:
+      break;
   }
 }
 
