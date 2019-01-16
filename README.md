@@ -1,8 +1,10 @@
 # ricloud-js: iCloud access made easy
 
-This is the sample JavaScript Node.js client for Reincubate's [iCloud API](https://www.reincubate.com/labs/icloud-api/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud).
+This is the sample JavaScript Node.js client for Reincubate's [iCloud API](https://reincubate.com/ricloud-api/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud).
 
-> Refer to the comprehensive [iCloud API documentation](https://www.reincubate.com/contact/support/icloud-api/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud) for a fuller picture of the API's capabilities, specifications, and benefits.
+Note that this client is only compatible with the v1 API, and does not support functionality related to the v2 or v3 API. If you are looking to implement a JS API client for newer versions of the *ricloud* API we would be happy to advise and contribute.
+
+> Refer to the comprehensive [iCloud API documentation](https://docs.reincubate.com/ricloud/icloud-api/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud) for a fuller picture of the API's capabilities, specifications, and benefits.
 
 ## Installation
 
@@ -100,7 +102,7 @@ api.requestData(device, requested_data, since, function(err,data) {
 
 ## Troubleshooting
 
-See the iCloud API [support page](https://www.reincubate.com/contact/support/icloud-api/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud).
+See the iCloud API [docs](https://docs.reincubate.com/ricloud/icloud-api/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud).
 
 ## <a name="more"></a>Need more functionality?
 
@@ -118,7 +120,7 @@ The company can help users with:
 * Custom iOS app data extraction
 * Advanced PList, TypedStream and Mbdb manipulation
 
-Contact [Reincubate](https://www.reincubate.com/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud) for more information.
+Contact [Reincubate](https://reincubate.com/?utm_source=github&utm_medium=ricloud-js&utm_campaign=ricloud) for more information.
 
 ## Terms & license
 

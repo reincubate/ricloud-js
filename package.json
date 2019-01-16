@@ -1,17 +1,18 @@
 {
   "name": "ricloud",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "license": "LGPL-3.0",
-  "homepage": "https://www.reincubate.com",
+  "homepage": "https://reincubate.com",
   "scripts": {
     "test": "node ricloud-test.js"
   },
   "dependencies": {
-    "debug": "^2.6.3",
-    "lodash": "^4.17.4",
-    "moment": "~2.21.0",
+    "cryptiles": "^4.1.2",
+    "debug": "^2.6.9",
+    "lodash": "^4.17.5",
+    "moment": "~2.23.0",
     "readline-sync": "~1.2.21",
-    "request": "~2.85.0"
+    "request": "~2.88.0"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,7 @@
     "icloud"
   ],
   "devDependencies": {
-    "babel-eslint": "^7.1.1",
-    "eslint": "^3.14.1"
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.12.0"
   }
 }

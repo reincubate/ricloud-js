@@ -1,3 +1,7 @@
+## 1.0.13
+* Bump dependencies on security recommendations.
+
+
 <a name="1.0.6"></a>
 ## [1.0.6](https://github.com/reincubate/ricloud-js/compare/1.0.5...v1.0.6) (2017-03-30)
 
